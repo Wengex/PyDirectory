@@ -34,3 +34,9 @@ class InvalidValue(customException):
 
 class MustBeOptionType(customException):
 	message = "Value must be Option type"
+
+class PasswordPrintNotAllowed(customException):
+	message = "Password Print is not Allowed"
+
+class DNSHostnameCanNotBeResolved(customException):
+	message = "DNS Hostname Can not be resolved"
