@@ -68,7 +68,7 @@ class LDAP(object):
 			c.search(search_base = basedn,search_filter = query, search_scope = SUBTREE, attributes = attributes, paged_size = 1000)
 			for entry in c.response:
 				result.append(entry)
-				cookie = c.result['controls']['1.2.840.113556.1.4.319']['value']['cookie']
+			cookie = c.result['controls']['1.2.840.113556.1.4.319']['value']['cookie']
 			while cookie:
 				c.search(search_base = basedn,search_filter = query,search_scope = SUBTREE,attributes = attributes,paged_size = 1000,paged_cookie = cookie)
 				cookie = c.result['controls']['1.2.840.113556.1.4.319']['value']['cookie']

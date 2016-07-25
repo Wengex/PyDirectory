@@ -23,7 +23,7 @@ class engine (Engine):
 			if result == False:
 				raise exceptions.InvalidCredentials
 			if self._settings.basedn == None:
-				self._settings.basedn = conn.server.info.raw['defaultNamingContext'][0]
+				self._settings.basedn = conn.server.info.raw['defaultNamingContext'][0].decode('utf-8') #fix to convert byte to string
 			return conn
 		return result
 
