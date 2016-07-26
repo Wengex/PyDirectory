@@ -40,3 +40,6 @@ class PasswordPrintNotAllowed(customException):
 
 class DNSHostnameCanNotBeResolved(customException):
 	message = "DNS Hostname Can not be resolved"
+
+class MultipleResults(customException):
+	message = "Response return multiple results"
