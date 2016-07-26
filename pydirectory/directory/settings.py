@@ -38,7 +38,6 @@ class Option(object):
 
 	def __repr__(self):
 		if type(self.value) == bytes:
-			print ("es byte")
 			return self.value
 		if self.is_password:
 			return str(self.value)

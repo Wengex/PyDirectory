@@ -1,9 +1,9 @@
 from ldap3 import SUBTREE, BASE
-from directory.objects import Objects, ObjectsList, Object, SEARCH
+from directory.objects import Objects, ObjectsList, Object
 import exceptions
 
 
-class search(SEARCH):
+class search(Objects.SEARCH):
 	def user(self,query):
 		objtype = {
 			'objectClass' : ['top','person', 'organizationalPerson', 'user']
@@ -31,7 +31,7 @@ class search(SEARCH):
 	def _get(self,query):
 		attributes = ['*','+']
 		searchScope = SUBTREE
-		result = ObjectsList(Object)
+		result = ObjectsList(Object,self._engine)
 		c = self._engine._worker
 		cookie = None
 		while (cookie) or (cookie == None):
