@@ -38,6 +38,8 @@ class search(Objects.SEARCH):
 			c.search(search_base=self._engine._settings.basedn,search_filter=query,search_scope = SUBTREE, attributes=['*','+'], paged_size=1000, paged_cookie=cookie)
 			cookie = c.result['controls']['1.2.840.113556.1.4.319']['value']['cookie']
 			for entry in c.response:
+				if not 'dn' in entry.get('raw_attributes',{'dn':False}):
+					entry['raw_attributes']['dn'] = entry['raw_attributes']['distinguishedName']
 				if not entry.get('uri',False):
 					result.append(entry['raw_attributes'])
 		return result

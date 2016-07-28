@@ -1,17 +1,29 @@
+import directory.attributes
+
 class Object(object):
+	attributes = directory.attributes
 	def __init__(self,engine,data):
 		self._store = dict()
+		self._engine = engine
 		self._update(data)
 
 	def _update(self,data):
 		for attr,value in data.items():
-			self[attr] = value[0]
+			self[attr] = value
+
+	def __setattr__(self,key,value):
+		if key.find('_') == 0:
+			super(Object,self).__setattr__(key,value)
+		else:
+			self.__setitem__(key,value)
 
 	def __getattr__(self,key):
+		if key.find('_') == 0:
+			return super(Object,self).__getattribute__(key)
 		return self._store[key]
 
 	def __setitem__(self,key,value):
-		self._store[key] = value
+		self._store[key] = self.attributes.attribute(self._engine,value)
 
 	def __dir__(self):
 		return self._store.keys()
