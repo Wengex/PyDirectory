@@ -1,4 +1,3 @@
-
 class customException(Exception):
 	def __init__(self,message=False):
 		if message:

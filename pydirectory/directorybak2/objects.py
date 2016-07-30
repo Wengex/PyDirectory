@@ -1,4 +1,5 @@
 import directory.attributes
+import importlib
 
 class Object(object):
 	attributes = directory.attributes
@@ -6,6 +7,7 @@ class Object(object):
 		self._store = dict()
 		self._engine = engine
 		self._update(data)
+		self._delete = []
 
 	def _update(self,data):
 		for attr,value in data.items():
@@ -17,13 +19,23 @@ class Object(object):
 		else:
 			self.__setitem__(key,value)
 
+	def __delattr__(self,key):
+		if key.find('_') == 0:
+			super(Object,self).__delattr__(value)
+		else:
+			self._delete.append(key)
+			del self._store[key]
+
 	def __getattr__(self,key):
 		if key.find('_') == 0:
 			return super(Object,self).__getattribute__(key)
 		return self._store[key]
 
 	def __setitem__(self,key,value):
-		self._store[key] = self.attributes.attribute(self._engine,value)
+		try:
+			self._store[key] = getattr(self.attributes,key.lower())(self._engine,value)
+		except AttributeError:
+			self._store[key] = self.attributes.attribute(self._engine,value)
 
 	def __dir__(self):
 		return self._store.keys()
@@ -44,10 +56,16 @@ class Object(object):
 		pass
 
 
+class ObjectType(object):
+	def __init__(self,engine):
+		self._engine = engine
+
+	def __call__(self,data):
+		importlib.import_module("%(type)s.settings" % {'type':type}).settings(**kwargs)
 
 
 class ObjectsList(list):
-	def __init__(self,obj,engine,*args,**kwargs):
+	def __init__(self,obj,engine,*args,**kwargs): #change engine by object
 		self._object = obj
 		self._engine = engine
 		super(ObjectsList,self).__init__(*args,**kwargs)
@@ -55,35 +73,3 @@ class ObjectsList(list):
 	def append(self,data):
 		obj = self._object(self._engine,data)
 		super(ObjectsList,self).append(obj)
-
-
-
-class Objects(object):
-
-	class SEARCH(object):
-		def __init__(self,engine):
-			self._engine = engine
-
-		def __call__(self,query):
-			return self._get(query)
-
-	class NEW(object):
-		def __init__(self,engine):
-			self._engine = engine
-
-		def __call__(self,query):
-			return self._get(query)
-
-	def __init__(self,engine):
-		self._engine = engine
-
-	@property
-	def search(self):
-		return self._search(self._engine)
-
-	@property
-	def get(self):
-		return self._get(self._engine)
-
-	def new(self):
-		return self._new(self._engine)

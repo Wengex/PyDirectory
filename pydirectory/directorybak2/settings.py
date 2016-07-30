@@ -75,7 +75,8 @@ class Option(object):
 
 class Settings(object):
 
-	def __init__(self,**kwargs):
+	def __init__(self,type,**kwargs):
+		self.type = Option(null=False,type=str,description="Type engine",value=type)
 		self._options(**kwargs)
 
 	def __setattr__(self,name,value):

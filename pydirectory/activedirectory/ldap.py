@@ -1,2 +1,0 @@
-class ActiveDirectory(object):
-	pass

@@ -1,5 +1,5 @@
 from ldap3 import SUBTREE, BASE
-from directory.objects import Objects, ObjectsList, Object
+from directory.objects import Objects, ObjectsList, ObjectType, Object
 import exceptions
 
 
