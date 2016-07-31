@@ -1,11 +1,14 @@
 import importlib
 
 class object(object):
+	objtype = {}
 	def __init__(self,engine,data):
 		self._engine = engine
 		self._attributes = importlib.import_module("%(type)s.objects.attributes" % {'type':self._engine._settings.type})
 		self._attrs = {}
+		self._initload = True
 		self._update(data)
+		self._initload = False
 		self._deletes = []
 
 	def __setitem__(self,key,value):
@@ -13,7 +16,10 @@ class object(object):
 			attribute = getattr(self._attributes,key)
 		except AttributeError:
 			attribute = self._attributes.attribute
-		self._attrs[key.lower()] = attribute(value)
+		if self._initload:
+			self._attrs[key.lower()] = attribute(value,modify=False)
+		else:
+			self._attrs[key.lower()] = attribute(value,modify=True)
 
 	def __getitem__(self,key):
 		return self._attrs[key]
@@ -23,9 +29,11 @@ class object(object):
 		del self._attrs[key]
 
 	def __getattribute__(self,key):
-		if key.find('_') == 0:
-			return super(object,self).__getattribute__(key)
-		return self[key]
+
+		if key.find('_') != 0:
+			if key in self._attrs:
+				return self[key]
+		return super(object,self).__getattribute__(key)
 
 	def __setattr__(self,key,value):
 		if key.find('_') == 0:
@@ -60,5 +68,11 @@ class object(object):
 	def items(self):
 		return self._attrs.items()
 
+	@classmethod
+	def is_type(self,data):
+		if data == self.objtype.copy():
+			return True
+		return False
+
 	def save(self):
-		pass
+		return False
