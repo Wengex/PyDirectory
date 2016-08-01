@@ -2,9 +2,10 @@ import importlib
 
 class object(object):
 	objtype = {}
-	def __init__(self,engine,data):
-		self._engine = engine
-		self._attributes = importlib.import_module("%(type)s.objects.attributes" % {'type':self._engine._settings.type})
+	def __init__(self,objects,data):
+		self._objects = objects
+		self._exceptions = self._objects._exceptions
+		self._attributes = importlib.import_module("%(type)s.objects.attributes" % {'type':self._objects._engine._settings.type})
 		self._attrs = {}
 		self._initload = True
 		self._update(data)
@@ -17,9 +18,9 @@ class object(object):
 		except AttributeError:
 			attribute = self._attributes.attribute
 		if self._initload:
-			self._attrs[key.lower()] = attribute(value,modify=False)
+			self._attrs[key.lower()] = attribute(value,self._objects,modify=False)
 		else:
-			self._attrs[key.lower()] = attribute(value,modify=True)
+			self._attrs[key.lower()] = attribute(value,self._objects,modify=True)
 
 	def __getitem__(self,key):
 		return self._attrs[key]
@@ -76,3 +77,8 @@ class object(object):
 
 	def save(self):
 		return False
+
+	def reset(self):
+		self._delattr = []
+		self._addattr = []
+		self._reset()

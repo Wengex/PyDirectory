@@ -42,3 +42,6 @@ class DNSHostnameCanNotBeResolved(customException):
 
 class MultipleResults(customException):
 	message = "Response return multiple results"
+
+class ObjectIsModified(customException):
+	message = "The object is modified. You can not delete or append attributes values"

@@ -3,19 +3,19 @@ import directory.objects.types
 
 
 class objecttypes(object):
-	def __init__(self,engine):
-		self._engine = engine
+	def __init__(self,objects):
+		self._objects = objects
 
 	def _getobject(self,value):
-		return importlib.import_module("%(type)s.objects.types" % {'type':self._engine._settings.type}).object(self._engine,value)
+		return importlib.import_module("%(type)s.objects.types" % {'type':self._objects._engine._settings.type}).object(self._objects,value)
 
 	def __call__(self,value):
 		return self._getobject(value)
 
 class objectslist(object):
-	def __init__(self,engine): #change engine by object
-		self._engine = engine
-		self.objecttypes = importlib.import_module("%(type)s.objects.classes" % {'type':engine._settings.type}).objecttypes(self._engine)
+	def __init__(self,objects): #change engine by object
+		self._objects = objects
+		self.objecttypes = importlib.import_module("%(type)s.objects.classes" % {'type':self._objects._engine._settings.type}).objecttypes(self._objects)
 		self._store = []
 
 	def __getitem__(self,key):
@@ -44,19 +44,19 @@ class objectslist(object):
 
 class objects(object):
 	def __init__(self,engine):
-		self._exceptions = importlib.import_module("%(type)s.exceptions" % {'type':engine._settings.type})
 		self._engine = engine
-		self._search = importlib.import_module("%(type)s.objects.actions" % {'type':engine._settings.type}).search
-		self._get = importlib.import_module("%(type)s.objects.actions" % {'type':engine._settings.type}).get
-		self._new = importlib.import_module("%(type)s.objects.actions" % {'type':engine._settings.type}).new
+		self._exceptions = importlib.import_module("%(type)s.exceptions" % {'type':self._engine._settings.type})
+		self._search = importlib.import_module("%(type)s.objects.actions" % {'type':self._engine._settings.type}).search
+		self._get = importlib.import_module("%(type)s.objects.actions" % {'type':self._engine._settings.type}).get
+		self._new = importlib.import_module("%(type)s.objects.actions" % {'type':self._engine._settings.type}).new
 
 	@property
 	def search(self):
-		return self._search(self._engine)
+		return self._search(self)
 
 	@property
 	def get(self):
-		return self._get(self._engine)
+		return self._get(self)
 
 	def new(self):
-		return self._new(self._engine)
+		return self._new(self)

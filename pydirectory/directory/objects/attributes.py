@@ -1,5 +1,7 @@
 class attribute(object):
-	def __init__(self,value,modify=True):
+	def __init__(self,value,objects,modify=True):
+		self._objects = objects
+		self._exceptions = self._objects._exceptions
 		self._is_modified = False
 		self._is_append = False
 		self._is_delete = False
@@ -34,24 +36,51 @@ class attribute(object):
 		return self._raw[key]
 
 	def __delitem__(self,key):
+		if self._is_modified:
+			raise self._exceptions.ObjectIsModified
 		value = self._raw[key]
-		self._delattr.append(value)
-		self._is_delete = True
+		changed = False
+		if value in self._addattr:
+			key = self._addattr.index(value)
+			del self._addattr[key]
+			changed = True
+		if not value in self._delattr:
+			self._delattr.append(value)
+			changed = True
+		if changed:
+			self._is_delete = True
 
 	def __iter__(self):
 		return iter(self._raw)
 
 	def append(self,value):
-		self._addattr.append(value)
-		self._is_append = True
+		if self._is_modified:
+			raise self._exceptions.ObjectIsModified
+		changed = False
+		if value in self._delattr:
+			key = self._delattr.index(value)
+			del self._delattr[key]
+			changed = True
+		if not value in self._addattr:
+			self._addattr.append(value)
+			changed = True
+		if changed:
+			self._is_append = True
 
 	@property
 	def value(self):
-		if len(self._raw) == 1:
-			if type(self._raw[0]) == bytes:
-				return self._raw[0].decode('utf-8')
-			return self._raw[0]
-		return self._raw
+		result = self._raw
+		if not self._is_modified:
+			if len(self._raw) == 1:
+				if type(self._raw[0]) == bytes:
+					return self._raw[0].decode('utf-8')
+					result = self._raw[0]
+		if self._is_append or self._is_delete:
+			lsum = set(self._addattr) | set(self._raw)
+			ldel = lsum - set(self._delattr)
+			result = list(ldel)
+
+		return result
 
 	@property
 	def raw(self):

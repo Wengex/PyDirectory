@@ -9,10 +9,10 @@ class search (actions.search):
 	def _get(self,query):
 		attributes = ['*','+']
 		searchScope = SUBTREE
-		c = self._engine._worker
+		c = self._objects._engine._worker
 		cookie = None
 		while (cookie) or (cookie == None):
-			c.search(search_base=self._engine._settings.basedn,search_filter=query,search_scope = SUBTREE, attributes=['*','+'], paged_size=1000, paged_cookie=cookie)
+			c.search(search_base=self._objects._engine._settings.basedn,search_filter=query,search_scope = SUBTREE, attributes=['*','+'], paged_size=1000, paged_cookie=cookie)
 			cookie = c.result['controls']['1.2.840.113556.1.4.319']['value']['cookie']
 			for entry in c.response:
 				if not 'dn' in entry.get('raw_attributes',{'dn':False}):
