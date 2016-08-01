@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class attribute(object):
 	def __init__(self,value,objects,modify=True):
 		self._objects = objects
@@ -18,10 +19,17 @@ class attribute(object):
 			self._is_modified = False
 
 	def __str__(self):
-		if type(self.value) == str:
+		if (type(self.value) == str):
+
 			return self.value
 		else:
 			return str(self.value)
+
+	def __unicode__(self): #fix python 2.7 compatibility
+		if (type(self.value) == str):
+			return self.value.decode('utf-8')
+		else:
+			return unicode(self.value)
 
 	def __repr__(self):
 		if type(self.value) == str:
@@ -69,12 +77,19 @@ class attribute(object):
 
 	@property
 	def value(self):
+		try: #Fix to have python 2.x and python 3.x compatibility
+			typestr = unicode #On python 3 unicode type case not exists
+			unicodebase = True #is python 2
+		except:
+			typestr = str
+			unicodebase = False #is python 3
 		result = self._raw
-		if not self._is_modified:
-			if len(self._raw) == 1:
-				if type(self._raw[0]) == bytes:
-					return self._raw[0].decode('utf-8')
-					result = self._raw[0]
+		if len(self._raw) == 1:
+			if (type(self._raw[0]) == bytes) or (type(self._raw[0]) == str) or (type(self._raw[0]) == typestr):
+				result = self._raw[0]
+				if not unicodebase:
+					if type(result) == bytes:
+						result = result.decode('utf-8') #Fix to have python 2.x and python 3.x compatibility
 		if self._is_append or self._is_delete:
 			lsum = set(self._addattr) | set(self._raw)
 			ldel = lsum - set(self._delattr)
