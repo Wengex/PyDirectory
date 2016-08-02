@@ -12,5 +12,5 @@ class object(types.object):
 		return False
 
 	def _reset(self):
-		obj = self._objects.get('(distinguishedName='+self.dn.value+')')
+		obj = self._objects.get(dn=self.dn.value)
 		self._attrs = obj._attrs

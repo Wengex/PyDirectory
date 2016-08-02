@@ -78,7 +78,7 @@ class attribute(object):
 	@property
 	def value(self):
 		try: #Fix to have python 2.x and python 3.x compatibility
-			typestr = unicode #On python 3 unicode type case not exists
+			typestr = unicode #On python 3 unicode type case not exist
 			unicodebase = True #is python 2
 		except:
 			typestr = str

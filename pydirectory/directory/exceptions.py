@@ -22,8 +22,8 @@ class InvalidCredentials(customException):
 class AttributeNotValid(customException):
 	message = "The attribute is not valid"
 
-class SettingsOptionNotExists(customException):
-	message = "The Settings Option to set not exists"
+class SettingsOptionNotExist(customException):
+	message = "The Settings Option to set not exist"
 
 class InvalidValueType(customException):
 	message = "Invalid value type"
@@ -41,7 +41,10 @@ class DNSHostnameCanNotBeResolved(customException):
 	message = "DNS Hostname Can not be resolved"
 
 class MultipleResults(customException):
-	message = "Response return multiple results"
+	message = "The response has returned multiple results"
 
 class ObjectIsModified(customException):
 	message = "The object is modified. You can not delete or append attributes values"
+
+class ObjectNotExist(customException):
+	message = "The object not exist"

@@ -1,6 +1,7 @@
 import socket
 import getpass
 import importlib
+from directory import exceptions
 
 class Option(object):
 	def __init__(self,null=True,value=None,is_password=False,is_hostname=False,type=None,validator=None,description=None):
@@ -28,7 +29,7 @@ class Option(object):
 	def __str__(self):
 		result = str(self.value)
 		if self.is_password:
-			raise self.exceptions.PasswordPrintNotAllowed
+			raise exceptions.PasswordPrintNotAllowed
 		return result
 
 	def __eq__ (self,other):
@@ -45,11 +46,11 @@ class Option(object):
 				try:
 					value = self.__type(value)
 				except ValueError as e:
-					raise self.exceptions.InvalidValueType(e)
+					raise exceptions.InvalidValueType(e)
 
 				if self.__validator != None:
 					if not self.__validator(value):
-						raise self.exceptions.InvalidValue
+						raise exceptions.InvalidValue
 
 			if self.is_hostname:
 				try:
@@ -63,7 +64,7 @@ class Option(object):
 					self.ipv6 = False
 
 				if (not self.ipv4) and (not self.ipv6):
-					raise self.exceptions.DNSHostnameCanNotBeResolved
+					raise exceptions.DNSHostnameCanNotBeResolved
 
 		super(Option,self).__setattr__(name,value)
 

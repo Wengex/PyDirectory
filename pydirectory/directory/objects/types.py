@@ -61,10 +61,10 @@ class object(object):
 			self[attr] = value
 
 	def __str__(self):
-		return str(self._attrs['cn'])
+		return str(self._attrs['dn'])
 
 	def __repr__(self):
-		return repr(self._attrs['cn'])
+		return repr(self._attrs['dn'])
 
 	def items(self):
 		return self._attrs.items()

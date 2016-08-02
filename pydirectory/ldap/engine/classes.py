@@ -5,11 +5,14 @@ class engine (Engine):
 	def _authenticate(self,username,password,login=False):
 		server_options = {
 		 'host': repr(self._settings.host),
-		 'use_ssl': repr(self._settings.ssl),
+		 'use_ssl': self._settings.ssl.value,
 		 'get_info': ALL
 		}
+		if self._settings.port.value != None:
+			server_options['port'] = self._settings.port.value
+
 		server = Server(**server_options)
-		conn = Connection(server, user=username,password=password)
+		conn = Connection(server, user=username,password=password,auto_referrals=False,raise_exceptions=True)
 		result = False
 		try:
 			result = conn.bind()
@@ -17,6 +20,10 @@ class engine (Engine):
 			raise self._exceptions.InvalidServer
 		except:
 			raise self._exceptions.UnknownError
+
+
+		if self._settings.port.value == None:
+			self._settings.port = conn.server.port
 
 		if login:
 			if result == False:
