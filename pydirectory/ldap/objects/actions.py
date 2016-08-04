@@ -46,4 +46,5 @@ class get(search):
 		return result[0]
 
 class new (actions.new):
-	pass
+	def _get(self,*args,**kwargs):
+		pass

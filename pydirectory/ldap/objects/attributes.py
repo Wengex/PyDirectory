@@ -3,11 +3,14 @@ from ldap3 import MODIFY_REPLACE
 
 
 class attribute(attributes.attribute):
-	_use_rdn = False
+	_is_rdn = False
 	_operator = MODIFY_REPLACE
 
 class cn(attribute):
-	_use_rdn = True
+	_is_rdn = True
+
+class dn(attribute):
+	_is_rdn = True
 
 class samaccountname(attribute):
 	pass

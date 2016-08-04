@@ -10,7 +10,7 @@ class object(object):
 		self._initload = True
 		self._update(data)
 		self._initload = False
-		self._deletes = []
+		self._drops = []
 
 	def __setitem__(self,key,value):
 		try:
@@ -26,7 +26,7 @@ class object(object):
 		return self._attrs[key]
 
 	def __delitem__(self,key):
-		self._deletes.append(key)
+		self._drops.append(key)
 		del self._attrs[key]
 
 	def __getattribute__(self,key):
@@ -34,7 +34,10 @@ class object(object):
 		if key.find('_') != 0:
 			if key in self._attrs:
 				return self[key]
-		return super(object,self).__getattribute__(key)
+		try:
+			return super(object,self).__getattribute__(key)
+		except AttributeError:
+			return None
 
 	def __setattr__(self,key,value):
 		if key.find('_') == 0:

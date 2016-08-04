@@ -13,5 +13,5 @@ class new(object):
 	def __init__(self,objects):
 		self._objects = objects
 
-	def __call__(self,query):
-		return self._get(query)
+	def __call__(self):
+		return self._get()

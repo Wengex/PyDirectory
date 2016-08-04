@@ -1,5 +1,5 @@
 from directory.exceptions import *
-from ldap3 import LDAPSocketOpenError,LDAPInvalidFilterError
+from ldap3 import LDAPSocketOpenError,LDAPInvalidFilterError,LDAPChangesError
 
 class LDAPError(customException):
 	pass
