@@ -85,8 +85,8 @@ class attribute(object):
 			unicodebase = False #is python 3
 		result = self._raw
 		if len(self._raw) == 1:
+			result = self._raw[0]
 			if (type(self._raw[0]) == bytes) or (type(self._raw[0]) == str) or (type(self._raw[0]) == typestr):
-				result = self._raw[0]
 				if not unicodebase:
 					if type(result) == bytes:
 						result = result.decode('utf-8') #Fix to have python 2.x and python 3.x compatibility

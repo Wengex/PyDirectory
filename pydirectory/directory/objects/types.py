@@ -13,6 +13,10 @@ class object(object):
 		self._drops = []
 
 	def __setitem__(self,key,value):
+		if not self._initload:
+			if value == None:
+				del self[key]
+				return
 		try:
 			attribute = getattr(self._attributes,key)
 		except AttributeError:
@@ -26,6 +30,8 @@ class object(object):
 		return self._attrs[key]
 
 	def __delitem__(self,key):
+		print(self.dn)
+		print(key)
 		self._drops.append(key)
 		del self._attrs[key]
 
