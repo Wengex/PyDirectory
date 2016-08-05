@@ -48,3 +48,6 @@ class ObjectIsModified(customException):
 
 class ObjectNotExist(customException):
 	message = "The object not exist"
+
+class AttributeisReadOnly(customException):
+	message = "The attribute is read only"

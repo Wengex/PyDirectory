@@ -18,8 +18,8 @@ class engine (Engine):
 			result = conn.bind()
 		except self._exceptions.LDAPSocketOpenError:
 			raise self._exceptions.InvalidServer
-		except:
-			raise self._exceptions.UnknownError
+		except self._exceptions.LDAPInvalidCredentialsResult:
+			raise self._exceptions.InvalidCredentials
 
 
 		if self._settings.port.value == None:

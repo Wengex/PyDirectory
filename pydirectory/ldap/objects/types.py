@@ -13,11 +13,32 @@ class object(types.object):
 			operator = MODIFY_DELETE
 			modlist[key] = [(operator,[])]
 		self._drops = []
-		if len(modlist) <= 0:
-			return False
-		if self._objects._engine._worker.modify(self.dn.value,modlist):
-			return True
-		return False
+		if len(modlist) > 0:
+			self._objects._engine._worker.modify(self.dn.value,modlist)
+
+		if self.cn._is_modified:
+			self._objects._engine._worker.modify_dn(self.dn.value,'CN='+self.cn.value)
+			self.dn.update('CN='+self.cn.value+','+self.dn.value.split(',')[1:])
+			self.cn._is_modified = False
+
+		if self.container._is_modified: #falta por terminar
+			self._objects._engine._worker.modify_dn(self.dn.value,'CN='+self.cn.value,new_superior=self.container.value)
+
+			self.container._is_modified = False
+
+
+
+		#if self.container._is_modified:
+		#	conf = {
+		#		"dn": self.dn.value,
+		#	}
+		#	conf['relative_dn'] = "CN="+self.cn.value
+
+#			if self.container._is_modified:
+#				conf['new_superior'] = self.container.value
+#			print(conf)
+#			if self._objects._engine._worker.modify_dn(**conf):
+#				result = True
 
 	def _reset(self):
 		obj = self._objects.get(dn=self.dn.value)

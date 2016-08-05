@@ -24,14 +24,15 @@ class object(object):
 		if self._initload:
 			self._attrs[key.lower()] = attribute(value,self._objects,modify=False)
 		else:
-			self._attrs[key.lower()] = attribute(value,self._objects,modify=True)
+			if not attribute._is_readonly:
+				self._attrs[key.lower()] = attribute(value,self._objects,modify=True)
+			else:
+				raise self._exceptions.AttributeisReadOnly
 
 	def __getitem__(self,key):
 		return self._attrs[key]
 
 	def __delitem__(self,key):
-		print(self.dn)
-		print(key)
 		self._drops.append(key)
 		del self._attrs[key]
 

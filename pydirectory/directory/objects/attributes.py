@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 class attribute(object):
+	_is_readonly = False
 	def __init__(self,value,objects,modify=True):
 		self._objects = objects
 		self._exceptions = self._objects._exceptions
@@ -74,6 +75,12 @@ class attribute(object):
 			changed = True
 		if changed:
 			self._is_append = True
+
+	def update(self,value):
+		if type(value) != list:
+			self._raw = [value]
+		else:
+			self._raw = value
 
 	@property
 	def value(self):

@@ -10,6 +10,10 @@ class cn(attribute):
 	_is_rdn = True
 
 class dn(attribute):
+	_is_readonly = True
+	_is_rdn = True
+
+class container(attribute):
 	_is_rdn = True
 
 class samaccountname(attribute):
