@@ -32,8 +32,10 @@ class search (actions.search):
 			for entry in c.response:
 				if not 'dn' in entry.get('raw_attributes',{'dn':False}):
 					entry['raw_attributes']['dn'] = entry['raw_attributes']['distinguishedName']
-					print(entry['raw_attributes']['dn'])
-					entry['raw_attributes']['container'] = [",".join(entry['raw_attributes']['dn'][0].split(',')[1:])]
+					try:
+						entry['raw_attributes']['container'] = [",".join(entry['raw_attributes']['dn'][0].split(',')[1:])]
+					except TypeError: #python 3.0 compatibility
+						entry['raw_attributes']['container'] = [b",".join(entry['raw_attributes']['dn'][0].split(b',')[1:])]
 				if not entry.get('uri',False):
 					self._objectslist.append(entry['raw_attributes'])
 		return self._objectslist
