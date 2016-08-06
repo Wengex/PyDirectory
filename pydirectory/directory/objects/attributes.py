@@ -9,34 +9,36 @@ class attribute(object):
 		self._is_delete = False
 		self._delattr = []
 		self._addattr = []
-		if not (type(value) == list):
-			self._raw = [value]
-		else:
-			self._raw = value
+		self._toraw(value)
 
 		if modify:
 			self._is_modified = True
 		else:
 			self._is_modified = False
 
-	def __str__(self):
-		if (type(self.value) == str):
-
-			return self.value
+	def _toraw(self,value):
+		if not (type(value) == list):
+			self._raw = [value]
 		else:
-			return str(self.value)
+			self._raw = value
+
+	def __str__(self):
+		if (type(self._tohuman) == str):
+			return self._tohuman
+		else:
+			return str(self._tohuman)
 
 	def __unicode__(self): #fix python 2.7 compatibility
-		if (type(self.value) == str):
-			return self.value.decode('utf-8')
+		if (type(self._tohuman) == str):
+			return self._tohuman.decode('utf-8')
 		else:
-			return unicode(self.value)
+			return unicode(self._tohuman)
 
 	def __repr__(self):
-		if type(self.value) == str:
-			return self.value
+		if type(self._tohuman) == str:
+			return self._tohuman
 		else:
-			return repr(self.value)
+			return repr(self._tohuman)
 
 	def __setitem__(self,key,value):
 		self._raw[key] = value
@@ -81,6 +83,10 @@ class attribute(object):
 			self._raw = [value]
 		else:
 			self._raw = value
+
+	@property
+	def _tohuman(self):
+		return self.value
 
 	@property
 	def value(self):

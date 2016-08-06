@@ -15,6 +15,3 @@ class dn(attribute):
 
 class container(attribute):
 	_is_rdn = True
-
-class samaccountname(attribute):
-	pass
