@@ -1,5 +1,5 @@
 from ldap.objects.attributes import *
-
+import binascii, uuid
 
 class userAccountControl(attribute):
 	types = {
@@ -39,32 +39,70 @@ class userAccountControl(attribute):
 			else:
 				self._raw = value
 		else:
-			self.raw = [str(value)]
+			self._raw = [str(value)]
 
-	@property
 	def _tohuman(self):
 		binary = bin(int(self.value))[2:][::-1]
-		print (binary)
 		values = []
 		for bit in range(0,len(binary)):
 			if binary[bit] == '1':
 				decimal = int(binary[bit]+'0'*bit,2)
 				try:
-					position = self.types.values().index(decimal)
-					value = self.types.keys()[position]
+					position = list(self.types.values()).index(decimal)
+					value = list(self.types.keys())[position]
 					values.append(value)
 				except:
 					values.append("UNKNOWN")
 		return values
 
 
+class unicodePwd(attribute):
+	def _toraw(self,value):
+		try:
+			password = ('"%s"' % value).encode('utf-16-le')
+		except UnicodeDecodeError:
+			password = ('"%s"' % value.decode('utf-8')).encode('utf-16-le')
+		self._raw = [password]
 
-	#	pass
-#		if type(value) == list:
-#			acControl = self.adldap.accountControl(value)
-#			if acControl > 0:
-#				self.raw = [str(self.adldap.accountControl(value))]
-#			else:
-#				self.raw = value
-#		else:
-#			self.raw = [str(value)]
+	def _tohuman(self):
+		raise self._exceptions.PasswordPrintNotAllowed
+
+
+class ObjectSid(attribute):
+	_is_readonly = True
+
+	def _littleEndian(self,hex):
+		result = '';
+		xinit = len(hex) - 2
+		for x in range(xinit,0-1,-2):
+			result += hex[x:x+2]
+		return result
+
+	def _getTextSID(self,binsid):
+		hex_sid = binascii.hexlify(binsid).decode('utf-8')
+		subcount = int(hex_sid[2:2+2],16)
+		rev = int(hex_sid[0:0+2],16)
+		auth = int(hex_sid[4:4+12],16)
+		result = str(rev)+'-'+str(auth)
+		subauth = {}
+		for x in range(0,subcount):
+			le = hex_sid[16+(x*8):(16+(x*8))+8]
+			subauth[x] = int(self._littleEndian(le),16)
+			try:
+				result += '-'+str(subauth[x])
+			except TypeError:
+				result += '-'+bytes(subauth[x])
+		return 'S-'+result
+
+	def _tovalue(self):
+		return self._getTextSID(self.raw[0])
+
+
+class sIDHistory(ObjectSid):
+	pass
+
+
+class ObjectGUID(attribute):
+	_is_readonly = True
+	def _tovalue(self):
+		return str(uuid.UUID(bytes=self.raw[0]))

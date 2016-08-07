@@ -17,8 +17,14 @@ class object(object):
 			if value == None:
 				del self[key]
 				return
+
+		def lower_name(s,obj):
+			for item in dir(obj):
+				if item.lower() == s.lower():
+					return item
+
 		try:
-			attribute = getattr(self._attributes,key)
+			attribute = getattr(self._attributes,str(lower_name(key,self._attributes)))
 		except AttributeError:
 			attribute = self._attributes.attribute
 		if self._initload:

@@ -23,22 +23,22 @@ class attribute(object):
 			self._raw = value
 
 	def __str__(self):
-		if (type(self._tohuman) == str):
-			return self._tohuman
+		if (type(self._tohuman()) == str):
+			return self._tohuman()
 		else:
-			return str(self._tohuman)
+			return str(self._tohuman())
 
 	def __unicode__(self): #fix python 2.7 compatibility
-		if (type(self._tohuman) == str):
-			return self._tohuman.decode('utf-8')
+		if (type(self._tohuman()) == str):
+			return self._tohuman().decode('utf-8')
 		else:
-			return unicode(self._tohuman)
+			return unicode(self._tohuman())
 
 	def __repr__(self):
-		if type(self._tohuman) == str:
-			return self._tohuman
+		if type(self._tohuman()) == str:
+			return self._tohuman()
 		else:
-			return repr(self._tohuman)
+			return repr(self._tohuman())
 
 	def __setitem__(self,key,value):
 		self._raw[key] = value
@@ -84,12 +84,14 @@ class attribute(object):
 		else:
 			self._raw = value
 
-	@property
 	def _tohuman(self):
 		return self.value
 
 	@property
 	def value(self):
+		return self._tovalue()
+
+	def _tovalue(self):
 		try: #Fix to have python 2.x and python 3.x compatibility
 			typestr = unicode #On python 3 unicode type case not exist
 			unicodebase = True #is python 2
