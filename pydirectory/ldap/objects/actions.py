@@ -29,15 +29,13 @@ class search (actions.search):
 					raise self._exceptions.LDAPReferrals(c.result['referrals'][0])
 				raise self._exceptions.LDAPError(str(c.result))
 			cookie = c.result['controls']['1.2.840.113556.1.4.319']['value']['cookie']
-			for entry in c.response:
-				if not 'dn' in entry.get('raw_attributes',{'dn':False}):
-					entry['raw_attributes']['dn'] = entry['raw_attributes']['distinguishedName']
-					try:
-						entry['raw_attributes']['container'] = [",".join(entry['raw_attributes']['dn'][0].split(',')[1:])]
-					except TypeError: #python 3.0 compatibility
-						entry['raw_attributes']['container'] = [b",".join(entry['raw_attributes']['dn'][0].split(b',')[1:])]
-				if not entry.get('uri',False):
-					self._objectslist.append(entry['raw_attributes'])
+			for entry in c.entries:
+				entry._response['raw_attributes']['dn'] = entry._dn
+				try:
+					entry._response['raw_attributes']['container'] = [",".join(entry._response['raw_attributes']['dn'][0].split(',')[1:])]
+				except TypeError: #python 3.0 compatibility
+					entry._response['raw_attributes']['container'] = [b",".join(entry._response['raw_attributes']['dn'][0].split(b',')[1:])]
+				self._objectslist.append(entry._response['raw_attributes'])
 		return self._objectslist
 
 class get(search):

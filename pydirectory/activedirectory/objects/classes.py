@@ -8,8 +8,8 @@ class objecttypes(classes.objecttypes):
 			if type.find('__') != 0: #ignore any metaclass. Ej: __whatever__
 				try: #check if data in value is same some class
 					objclass = getattr(types,type)
-					objclass.type.get('objectClass').sort()
-					if objclass.type.get('objectClass',[]) == value.get('objectClass',[]):
+					objclass._type.get('objectClass').sort()
+					if objclass._type.get('objectClass',[]) == value.get('objectClass',[]):
 						return objclass(self._objects,value)
 				except AttributeError:
 					pass

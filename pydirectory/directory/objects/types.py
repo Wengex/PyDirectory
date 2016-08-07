@@ -1,7 +1,7 @@
 import importlib
 
 class object(object):
-	objtype = {}
+	_objtype = {}
 	def __init__(self,objects,data):
 		self._objects = objects
 		self._exceptions = self._objects._exceptions
@@ -84,12 +84,6 @@ class object(object):
 
 	def items(self):
 		return self._attrs.items()
-
-	@classmethod
-	def is_type(self,data):
-		if data == self.objtype.copy():
-			return True
-		return False
 
 	def save(self):
 		return False

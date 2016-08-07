@@ -1,24 +1,24 @@
 from ldap.objects import types
 
 class object(types.object):
-	type = {}
+	_type = {}
 
 class user(object):
-	type = {
+	_type = {
 		'objectClass' : [b'top',b'person', b'organizationalPerson', b'user']
 	}
 
 class group(object):
-	type = {
+	_type = {
 		'objectClass' : [b'top', b'group']
 	}
 
 class computer(object):
-	type = {
+	_type = {
 		'objectClass' : [b'top',b'person', b'organizationalPerson', b'user', b'computer']
 	}
 
 class ou(object):
-	type = {
+	_type = {
 		'objectClass' : [b'top', b'organizationalUnit']
 	}
