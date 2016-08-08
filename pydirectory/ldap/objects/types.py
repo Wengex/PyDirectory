@@ -24,8 +24,7 @@ class object(types.object):
 		if self.container._is_modified: #falta por terminar
 			self._objects._engine._worker.modify_dn(self.dn.value,'CN='+self.cn.value,new_superior=self.container.value)
 			self.dn.update('CN='+self.cn.value+','+self.container.value)
-
 			self.container._is_modified = False
 	def _reset(self):
-		obj = self._objects.get(dn=self.dn.value)
+		obj = self._objects.get(dn=self.dn.value,scope='BASE')
 		self._attrs = obj._attrs

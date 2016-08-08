@@ -7,6 +7,10 @@ class search (actions.search):
 		return self.__call__(*args,**kwargs)
 
 	def _get(self,query,**kwargs):
+		scope = SUBTREE
+		if kwargs.get('scope','').upper() == 'BASE':
+			scope = BASE
+
 		if kwargs.get("dn",False):
 			basedn=kwargs["dn"]
 		else:
@@ -22,7 +26,7 @@ class search (actions.search):
 		c = self._objects._engine._worker
 		cookie = None
 		while (cookie) or (cookie == None):
-			c.search(search_base=basedn,search_filter=query,search_scope = SUBTREE, attributes=['*','+'], paged_size=1000, paged_cookie=cookie)
+			c.search(search_base=basedn,search_filter=query,search_scope = scope, attributes=['*','+'], paged_size=1000, paged_cookie=cookie)
 			if not (c.result.get('result',False) == 0):
 				code = c.result.get('result')
 				if code == 10:
@@ -30,7 +34,7 @@ class search (actions.search):
 				raise self._exceptions.LDAPError(str(c.result))
 			cookie = c.result['controls']['1.2.840.113556.1.4.319']['value']['cookie']
 			for entry in c.entries:
-				entry._response['raw_attributes']['dn'] = entry._dn
+				entry._response['raw_attributes']['dn'] = [entry._dn]
 				try:
 					entry._response['raw_attributes']['container'] = [",".join(entry._response['raw_attributes']['dn'][0].split(',')[1:])]
 				except TypeError: #python 3.0 compatibility
