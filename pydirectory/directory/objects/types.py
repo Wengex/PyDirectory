@@ -85,8 +85,12 @@ class object(object):
 	def items(self):
 		return self._attrs.items()
 
+	@property
+	def attributes(self):
+		return self._attrs
+
 	def save(self):
-		return False
+		self._save()
 
 	def reset(self):
 		self._delattr = []

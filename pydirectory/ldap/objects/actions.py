@@ -52,5 +52,6 @@ class get(search):
 		return result[0]
 
 class new (actions.new):
-	def _get(self,*args,**kwargs):
-		pass
+	def _get(self,data,*args,**kwargs):
+		self._objectslist.append(data)
+		return self._objectslist[0]

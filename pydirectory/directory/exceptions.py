@@ -51,3 +51,6 @@ class ObjectNotExist(customException):
 
 class AttributeisReadOnly(customException):
 	message = "The attribute is read only"
+
+class CheckValueAttributes(customException):
+	message = "Some attribute value is not correct"

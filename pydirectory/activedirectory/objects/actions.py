@@ -45,4 +45,48 @@ class get(get):
 		return self.__call__(query,*args,**kwargs)
 
 class new (new):
-	pass
+	def user(self):
+		data = {
+			"dn":None,
+			"container":None,
+			"cn":None,
+			"samaccountname":None,
+			"objectClass":['top','person', 'organizationalPerson', 'user'],
+			'useraccountcontrol': ['ACCOUNTDISABLE', 'NORMAL_ACCOUNT'],
+			'userprincipalname': None,
+			'givenname':None,
+			'sn':None,
+			'displayname':None,
+		}
+		return self._get(data)
+
+	def group(self):
+		data = {
+			"dn":None,
+			"container":None,
+			"cn":None,
+			"samaccountname":514,
+			"objectClass":['top', 'group'],
+		}
+		return self._get(data)
+
+	def computer(self):
+		data = {
+			"dn":None,
+			"container":None,
+			"cn":None,
+			"samaccountname":None,
+			"objectClass":['top','person', 'organizationalPerson', 'user', 'computer'],
+			'useraccountcontrol': ['PASSWD_NOTREQD', 'WORKSTATION_TRUST_ACCOUNT'],
+		}
+		return self._get(data)
+
+
+	def ou(self):
+		data = {
+			"dn":None,
+			"container":None,
+			"ou":None,
+			"objectClass":['top', 'organizationalUnit'],
+		}
+		return self._get(data)

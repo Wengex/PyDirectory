@@ -39,10 +39,13 @@ class userAccountControl(attribute):
 			else:
 				self._raw = value
 		else:
-			self._raw = [str(value)]
+			self._raw = [value]
 
 	def _tohuman(self):
-		binary = bin(int(self.value))[2:][::-1]
+		try:
+			binary = bin(int(self.value))[2:][::-1]
+		except:
+			return self.value
 		values = []
 		for bit in range(0,len(binary)):
 			if binary[bit] == '1':

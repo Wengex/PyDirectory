@@ -61,5 +61,6 @@ class objects(object):
 	def get(self):
 		return self._get(self)
 
+	@property
 	def new(self):
 		return self._new(self)
