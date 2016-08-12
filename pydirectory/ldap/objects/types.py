@@ -1,5 +1,5 @@
 from directory.objects import types
-from ldap3 import MODIFY_DELETE
+from ldap3 import MODIFY_DELETE,MODIFY_REPLACE
 
 class object(types.object):
 	def _save(self):
@@ -8,7 +8,7 @@ class object(types.object):
 			modlist = {}
 			for key,attr in self._attrs.items():
 				if attr._is_modified and (not attr._is_rdn):
-					operator = attr._operator
+					operator = MODIFY_REPLACE
 					modlist[key]= [(operator,attr.raw)]
 					attr._is_modified = False
 			for key in self._drops:
