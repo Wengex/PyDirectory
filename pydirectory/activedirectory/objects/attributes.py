@@ -1,5 +1,10 @@
 from ldap.objects.attributes import *
-import binascii, uuid
+
+class member(attribute):
+	pass
+
+class memberOf(attribute):
+	pass
 
 class userAccountControl(attribute):
 	types = {
@@ -82,6 +87,7 @@ class ObjectSid(attribute):
 		return result
 
 	def _getTextSID(self,binsid):
+		import binascii
 		hex_sid = binascii.hexlify(binsid).decode('utf-8')
 		subcount = int(hex_sid[2:2+2],16)
 		rev = int(hex_sid[0:0+2],16)
@@ -108,4 +114,136 @@ class sIDHistory(ObjectSid):
 class ObjectGUID(attribute):
 	_is_readonly = True
 	def _tovalue(self):
+		import uuid
 		return str(uuid.UUID(bytes=self.raw[0]))
+
+
+class formattime(attribute):
+	_is_readonly = True
+	def _tovalue(self):
+		#Hack from ldap3.protocol.formatters.formatters.format_time https://github.com/cannatag/ldap3
+		from activedirectory.tools import OffsetTzInfo
+		from datetime import datetime
+		raw_value = self.raw[0]
+		if len(raw_value) < 10 or not all((c in b'0123456789+-,.Z' for c in raw_value)) or (b'Z' in raw_value and not raw_value.endswith(b'Z')):  # first ten characters are mandatory and must be numeric or timezone or fraction
+			return raw_value
+
+		year = int(raw_value[0: 4])
+		month = int(raw_value[4: 6])
+		day = int(raw_value[6: 8])
+		hour = int(raw_value[8: 10])
+		minute = 0
+		second = 0
+		microsecond = 0
+
+		remain = raw_value[10:]
+		if remain and remain.endswith(b'Z'):  # uppercase 'Z'
+			sep = b'Z'
+		elif b'+' in remain:  # timezone can be specified with +hh[mm] or -hh[mm]
+			sep = b'+'
+		elif b'-' in remain:
+			sep = b'-'
+		else:  # timezone not specified
+			return raw_value
+
+		time, _, offset = remain.partition(sep)
+
+		if time and (b'.' in time or b',' in time):
+			# fraction time
+			if time[0] in b',.':
+				minute = 6 * int(time[1] if str == bytes else chr(time[1]))
+			elif time[2] in b',.':
+				minute = int(raw_value[10: 12])
+				second = 6 * int(time[3] if str == bytes else chr(time[3]))
+			elif time[4] in b',.':
+				minute = int(raw_value[10: 12])
+				second = int(raw_value[12: 14])
+				microsecond = 100000 * int(time[5] if str == bytes else chr(time[5]))
+			elif len(time) == 2:  # mmZ format
+				minute = int(raw_value[10: 12])
+			elif len(remain) == 0:  # Z format
+				pass
+			elif len(time) == 4:  # mmssZ
+				minute = int(raw_value[10: 12])
+				second = int(raw_value[12: 14])
+			else:
+				return raw_value
+
+			if sep == b'Z':  # UTC
+				timezone = OffsetTzInfo.OffsetTzInfo(0, 'UTC')
+			else:  # build timezone
+				try:
+					if len(offset) == 2:
+						timezone_hour = int(offset[:2])
+						timezone_minute = 0
+					elif len(offset) == 4:
+						timezone_hour = int(offset[:2])
+						timezone_minute = int(offset[2:4])
+					else:  # malformed timezone
+						raise ValueError
+				except ValueError:
+					return raw_value
+				if str != bytes:  # python3
+					timezone = OffsetTzInfo.OffsetTzInfo((timezone_hour * 60 + timezone_minute) * (1 if sep == b'+' else -1), 'UTC' + str(sep + offset, encoding='utf-8'))
+				else:
+					timezone = OffsetTzInfo.OffsetTzInfo((timezone_hour * 60 + timezone_minute) * (1 if sep == b'+' else -1), unicode('UTC' + sep + offset, encoding='utf-8'))
+
+			try:
+				return datetime(year=year,
+								month=month,
+								day=day,
+								hour=hour,
+								minute=minute,
+								second=second,
+								microsecond=microsecond,
+								tzinfo=timezone)
+			except (TypeError, ValueError):
+				return raw_value
+
+
+class WhenCreated(formattime):
+	pass
+
+class WhenChanged(formattime):
+	pass
+
+class dSCorePropagationData(formattime):
+	pass
+
+class adTimeStamp(attribute):
+	_is_readonly = True
+	def _tovalue(self):
+		#Hack from ldap3.protocol.formatters.formatters.format_ad_timestamp https://github.com/cannatag/ldap3
+		from activedirectory.tools import OffsetTzInfo
+		from datetime import datetime
+		try:
+			timestamp = int(self.raw[0])
+			return datetime.fromtimestamp(timestamp / 10000000.0 - 11644473600, tz=OffsetTzInfo.OffsetTzInfo(0, 'UTC'))
+		except Exception:
+			if self.raw[0] == b'9223372036854775807':
+				return datetime.max
+			return self.raw[0]
+
+class creationTime(adTimeStamp):
+	pass
+
+class pwdLastSet(adTimeStamp):
+	pass
+
+class badPasswordTime(adTimeStamp):
+	pass
+
+class lastLogon(adTimeStamp):
+	pass
+
+class lastLogonTimeStamp(adTimeStamp):
+	pass
+
+class accountExpires(adTimeStamp):
+	pass
+
+class maxPwdAge(adTimeStamp):
+	pass
+
+class minPwdAge(adTimeStamp):
+	pass

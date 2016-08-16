@@ -19,4 +19,8 @@ class objectslist(classes.objectslist):
 	pass
 
 class objects(classes.objects):
-	pass
+	@property
+	def base(self):
+		obj = self.get(dn=self._engine._settings.basedn.value,scope='base')
+		obj._is_readonly = True
+		return obj

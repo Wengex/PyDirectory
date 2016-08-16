@@ -1,5 +1,5 @@
 from directory.exceptions import *
-from ldap3 import LDAPSocketOpenError,LDAPInvalidFilterError,LDAPChangesError,LDAPInvalidCredentialsResult
+from ldap3 import LDAPSocketOpenError,LDAPInvalidFilterError,LDAPChangesError,LDAPInvalidCredentialsResult,LDAPSocketSendError
 from pyasn1.error import PyAsn1Error
 
 class LDAPError(customException):

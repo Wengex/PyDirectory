@@ -54,3 +54,6 @@ class AttributeisReadOnly(customException):
 
 class CheckValueAttributes(customException):
 	message = "Some attribute value is not correct"
+
+class IsReadOnly(customException):
+	message = "The action is not permitted. It is read only"

@@ -2,7 +2,8 @@ import importlib
 
 class object(object):
 	_objtype = {}
-	def __init__(self,objects,data):
+	def __init__(self,objects,data,readonly=False):
+		self._is_readonly = readonly
 		self._objects = objects
 		self._exceptions = self._objects._exceptions
 		self._attributes = importlib.import_module("%(type)s.objects.attributes" % {'type':self._objects._engine._settings.type})
@@ -90,7 +91,10 @@ class object(object):
 		return self._attrs
 
 	def save(self):
-		self._save()
+		if not self._is_readonly:
+			self._save()
+		else:
+			raise self._exceptions.IsReadOnly
 
 	def reset(self):
 		self._delattr = []
