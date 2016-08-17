@@ -10,7 +10,7 @@ class objecttypes(classes.objecttypes):
 					objclass = getattr(types,type)
 					objclass._type.get('objectClass').sort()
 					if objclass._type.get('objectClass',[]) == value.get('objectClass',[]):
-						return objclass(self._objects,value)
+						return objclass(self._objects,value,objid=value['dn'][0])
 				except AttributeError:
 					pass
 		return types.object(self._objects,value)

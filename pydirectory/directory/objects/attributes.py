@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 class attribute(object):
 	_is_readonly = False
-	def __init__(self,value,objects,modify=True):
+	def __init__(self,value,objects,objid=None,modify=True):
+		self._id = objid
 		self._objects = objects
 		self._exceptions = self._objects._exceptions
 		self._is_modified = False
@@ -19,6 +20,8 @@ class attribute(object):
 	def _toraw(self,value):
 		if not (type(value) == list):
 			self._raw = [value]
+		elif value == None:
+			self._raw = [None]
 		else:
 			self._raw = value
 
@@ -41,12 +44,19 @@ class attribute(object):
 			return repr(self._tohuman())
 
 	def __setitem__(self,key,value):
+		if self._is_readonly:
+			raise self._exceptions.IsReadOnly
 		self._raw[key] = value
 
 	def __getitem__(self,key):
-		return self._raw[key]
+		return self.raw[key]
+
+	def __len__(self):
+		return len(self.raw)
 
 	def __delitem__(self,key):
+		if self._is_readonly:
+			raise self._exceptions.IsReadOnly
 		if self._is_modified:
 			raise self._exceptions.ObjectIsModified
 		value = self._raw[key]
@@ -98,17 +108,13 @@ class attribute(object):
 		except:
 			typestr = str
 			unicodebase = False #is python 3
-		result = self._raw
+		result = self.raw
 		if len(self._raw) == 1:
 			result = self._raw[0]
 			if (type(self._raw[0]) == bytes) or (type(self._raw[0]) == str) or (type(self._raw[0]) == typestr):
 				if not unicodebase:
 					if type(result) == bytes:
 						result = result.decode('utf-8') #Fix to have python 2.x and python 3.x compatibility
-		if self._is_append or self._is_delete:
-			lsum = set(self._addattr) | set(self._raw)
-			ldel = lsum - set(self._delattr)
-			result = list(ldel)
 
 		return result
 

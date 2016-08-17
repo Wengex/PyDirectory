@@ -1,10 +1,33 @@
 from ldap.objects.attributes import *
 
 class member(attribute):
-	pass
+	_is_readonly = True
+
+	def _toraw(self,value):
+		self._raw = None
+
+	@property
+	def raw(self):
+		if self._raw == None:
+			member = []
+			init = 0
+			for end in range(1500,10000,1500):
+				try:
+					fieldname = 'member;range=%(init)s-%(end)s' % {"init":init,"end":end-1}
+					fieldwildcard = 'member;range=%(init)s-*' % {"init":init}
+					result = self._objects.search(dn=self._id,attributes=[fieldname])[0]
+					if fieldname in result.attributes.keys():
+						member.extend(result.attributes[fieldname])
+					if fieldwildcard in result.attributes.keys():
+						member.extend(result.attributes[fieldwildcard])
+					init=end
+				except self._exceptions.LDAPOperationsErrorResult:
+					self._raw = member
+
+		return self._raw
 
 class memberOf(attribute):
-	pass
+	_is_readonly = True
 
 class userAccountControl(attribute):
 	types = {

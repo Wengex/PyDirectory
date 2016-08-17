@@ -5,7 +5,7 @@ class object(types.object):
 
 class user(object):
 	_type = {
-		'objectClass' : [b'top',b'person', b'organizationalPerson', b'user']
+		'objectClass' : [b'top', b'person', b'organizationalPerson', b'user']
 	}
 	@property
 	def is_enable(self):
@@ -39,7 +39,7 @@ class user(object):
 		pwdLastSet = int(self.pwdlastset.raw[0])
 
 		if self.useraccountcontrol.value == '66048':
-			return None
+			return None #Object password not expire
 
 		if (pwdLastSet == 0):
 			return 0
@@ -50,7 +50,7 @@ class user(object):
 		except:
 			mod = 0
 		if mod == 0:
-			return None
+			return None #Domain not expire object passwords
 
 		pwdExpire = decimal.Decimal(pwdLastSet) - decimal.Decimal(maxPwdAge)
 		expiryts = int((pwdExpire / 10000000) - 11644473600)
@@ -68,11 +68,13 @@ class group(object):
 	def delMember(self,object):
 		pass
 
-	def isMember(self,object):
-		pass
-
 	def inGroup(self,object):
-		pass
+		if (object.dn != None) and (self.dn != None):
+			members = self._objects.search(self._objects.setQuery(in_group=object.dn.value))
+			for member in members:
+				if member.dn.value.strip().lower() == self.dn.value.strip().lower():
+					return True
+		return False
 
 class computer(object):
 	_type = {

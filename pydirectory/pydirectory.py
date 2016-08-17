@@ -12,3 +12,4 @@ class Directory(object):
 			if tool.find('_') != 0:
 				module = getattr(tools,tool)(self.objects)
 				setattr(self,tool,module)
+				setattr(self.objects,tool,module)

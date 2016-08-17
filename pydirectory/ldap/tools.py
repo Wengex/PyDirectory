@@ -21,7 +21,10 @@ class setQuery(object):
 		result = ''
 		for field,value in fields.items():
 			if field in self.specialFields.keys():
-				result += self.specialFields[field][value]
+				if type(self.specialFields[field]) == dict:
+					result += self.specialFields[field][value]
+				else:
+					result += self.specialFields[field].format(DN=value)
 				continue
 
 			wrapper = False

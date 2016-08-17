@@ -2,7 +2,11 @@ import importlib
 
 class object(object):
 	_objtype = {}
-	def __init__(self,objects,data,readonly=False):
+	def __init__(self,objects,data,objid=None,readonly=False):
+		if objid == None:
+			self._id = id(self)
+		else:
+			self._id = objid
 		self._is_readonly = readonly
 		self._objects = objects
 		self._exceptions = self._objects._exceptions
@@ -29,10 +33,10 @@ class object(object):
 		except AttributeError:
 			attribute = self._attributes.attribute
 		if self._initload:
-			self._attrs[key.lower()] = attribute(value,self._objects,modify=False)
+			self._attrs[key.lower()] = attribute(value,self._objects,objid=self._id,modify=False)
 		else:
 			if not attribute._is_readonly:
-				self._attrs[key.lower()] = attribute(value,self._objects,modify=True)
+				self._attrs[key.lower()] = attribute(value,self._objects,objid=self._id,modify=True)
 			else:
 				raise self._exceptions.AttributeisReadOnly
 

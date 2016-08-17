@@ -11,6 +11,8 @@ class setQuery(setQuery):
 	 		True: '(!(userAccountControl:1.2.840.113556.1.4.803:=2))',
 			False: '(userAccountControl:1.2.840.113556.1.4.803:=2)',
 		},
+		'is_member': '(memberof:1.2.840.113556.1.4.1941:={DN})',
+		'in_group': '(member:1.2.840.113556.1.4.1941:={DN})'
 	}
 
 # from python standard library docs

@@ -15,22 +15,23 @@ class search (actions.search):
 			basedn=kwargs["dn"]
 		else:
 			basedn=self._objects._engine._settings.basedn
+
+		attributes=['*','+']
+		if kwargs.get('attributes',False):
+			attributes=kwargs['attributes']
+
+
 		if (query == None):
 			if kwargs.get("dn",False):
 				query = '(objectclass=*)'
 			else:
 				raise self._exceptions.LDAPInvalidFilterError("must be set query filter syntax")
 
-		attributes = ['*','+']
 		searchScope = SUBTREE
 		c = self._objects._engine._worker
 		cookie = None
 		while (cookie) or (cookie == None):
-			try:
-				c.search(search_base=basedn,search_filter=query,search_scope = scope, attributes=['*','+'], paged_size=1000, paged_cookie=cookie)
-			except self._exceptions.LDAPSocketSendError:
-				self._objects._engine.login()
-				c.search(search_base=basedn,search_filter=query,search_scope = scope, attributes=['*','+'], paged_size=1000, paged_cookie=cookie)
+			c.search(search_base=basedn,search_filter=query,search_scope = scope, attributes=attributes, paged_size=1000, paged_cookie=cookie)
 
 			if not (c.result.get('result',False) == 0):
 				code = c.result.get('result')
