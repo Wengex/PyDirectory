@@ -13,3 +13,9 @@ class Directory(object):
 				module = getattr(tools,tool)(self.objects)
 				setattr(self,tool,module)
 				setattr(self.objects,tool,module)
+
+
+	def __del__(self):
+		del self.engine
+		del self.settings
+		del self.objects

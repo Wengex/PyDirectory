@@ -63,12 +63,22 @@ class group(object):
 	}
 
 	def addMember(self,object):
-		pass
+		if object.dn == None:
+			return None
+		try:
+			return self._objects._engine._worker.modify(self.dn.value,{'member':[('MODIFY_ADD',[object.dn.value])]})
+		except self._exceptions.LDAPEntryAlreadyExistsResult:
+			return False
 
 	def delMember(self,object):
-		pass
+		if object.dn == None:
+			return None
+		try:
+			return self._objects._engine._worker.modify(self.dn.value,{'member':[('MODIFY_DELETE',[object.dn.value])]})
+		except self._exceptions.LDAPUnwillingToPerformResult:
+			return False
 
-	def inGroup(self,object):
+	def isMember(self,object):
 		if (object.dn != None) and (self.dn != None):
 			members = self._objects.search(self._objects.setQuery(in_group=object.dn.value))
 			for member in members:

@@ -4,11 +4,15 @@ class member(attribute):
 	_is_readonly = True
 
 	def _toraw(self,value):
-		self._raw = None
+		if type(value) == list:
+			self._raw = value
+		else:
+			self._raw = [value]
+
 
 	@property
 	def raw(self):
-		if self._raw == None:
+		if self._raw[0] == None:
 			member = []
 			init = 0
 			for end in range(1500,10000,1500):

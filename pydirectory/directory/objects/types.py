@@ -94,6 +94,12 @@ class object(object):
 	def attributes(self):
 		return self._attrs
 
+	def delete(self):
+		if not self._is_readonly:
+			return self._delete()
+		else:
+			raise self._exceptions.IsReadOnly
+
 	def save(self):
 		if not self._is_readonly:
 			self._save()

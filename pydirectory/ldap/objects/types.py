@@ -2,6 +2,14 @@ from directory.objects import types
 from ldap3 import MODIFY_DELETE,MODIFY_REPLACE
 
 class object(types.object):
+	def _delete(self):
+		if self.dn.value == None:
+			return None
+		try:
+			return self._objects._engine._worker.delete(self.dn.value)
+		except self._exceptions.LDAPNoSuchObjectResult:
+			return False
+
 	def _save(self):
 		self.container._is_modified = False
 		if self.dn.value != None:
