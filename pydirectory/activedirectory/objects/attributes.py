@@ -2,7 +2,10 @@ from pydirectory.ldap.objects.attributes import *
 
 class PrimaryGroupID(attribute):
 	def _tovalue(self):
-		sid = self._objects.base.objectsid.value+'-'+self.raw[0]
+		sid = '%(base)s-%(id)s' % {
+			'base':self._objects.base.objectsid.value,
+			'id':int(self.raw[0])
+		}
 		return self._objects.get(self._objects.setQuery(objectsid=sid))
 
 class member(attribute):

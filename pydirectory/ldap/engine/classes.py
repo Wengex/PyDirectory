@@ -3,9 +3,6 @@ from pydirectory.directory.engine.classes import Engine
 
 class engine (Engine):
 
-	def __del__(self):
-		self._worker.unbind()
-
 	def _authenticate(self,username,password,login=False):
 		server_options = {
 		 'host': repr(self._settings.host),
