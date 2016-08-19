@@ -80,11 +80,29 @@ class group(object):
 
 	def isMember(self,object):
 		if (object.dn != None) and (self.dn != None):
-			members = self._objects.search(self._objects.setQuery(in_group=object.dn.value))
+			primarygroup = object.primarygroupid.value
+			if self.objectsid.value == primarygroup.objectsid.value:
+				return True
+			members = self._objects.search(self._objects.setQuery(is_member=self.dn.value))
 			for member in members:
-				if member.dn.value.strip().lower() == self.dn.value.strip().lower():
+				if (member.dn.value.strip().lower() == object.dn.value.strip().lower()) or (member.dn.value.strip().lower() == primarygroup.dn.value.strip().lower()):
 					return True
 		return False
+
+	@property
+	def allMembers(self):
+		if self._allmembers != None:
+			return self._allmembers
+		self._allmembers = []
+		primarygroupid=self.objectsid.value.replace(self._objects.base.objectsid.value+'-','')
+		members = []
+		if self.member != None:
+			members.extend(self.member.raw)
+		memberlst = self._objects.search(self._objects.setQuery(primarygroupid=primarygroupid))
+		if len(memberlst) > 0:
+			members.extend(memberlst)
+		self._allmembers = members
+		return members
 
 class computer(object):
 	_type = {

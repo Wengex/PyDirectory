@@ -1,14 +1,12 @@
 from ldap.objects.attributes import *
 
+class PrimaryGroupID(attribute):
+	def _tovalue(self):
+		sid = self._objects.base.objectsid.value+'-'+self.raw[0]
+		return self._objects.get(self._objects.setQuery(objectsid=sid))
+
 class member(attribute):
 	_is_readonly = True
-
-	def _toraw(self,value):
-		if type(value) == list:
-			self._raw = value
-		else:
-			self._raw = [value]
-
 
 	@property
 	def raw(self):

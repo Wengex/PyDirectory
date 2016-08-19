@@ -24,7 +24,11 @@ class setQuery(object):
 				if type(self.specialFields[field]) == dict:
 					result += self.specialFields[field][value]
 				else:
-					result += self.specialFields[field].format(DN=value)
+					if type(value) == list:
+						for pos in value:
+							result += self.specialFields[field].format(DN=pos)
+					else:
+						result += self.specialFields[field].format(DN=value)
 				continue
 
 			wrapper = False
