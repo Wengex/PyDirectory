@@ -1,4 +1,4 @@
-from ldap.engine import classes
+from pydirectory.ldap.engine import classes
 
 class engine (classes.engine):
 	pass

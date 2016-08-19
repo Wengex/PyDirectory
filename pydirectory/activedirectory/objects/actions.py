@@ -1,4 +1,4 @@
-from ldap.objects.actions import *
+from pydirectory.ldap.objects.actions import *
 
 class search (search):
 	def users(self,query=None,*args,**kwargs):

@@ -1,4 +1,4 @@
-from directory.exceptions import *
+from pydirectory.directory.exceptions import *
 from ldap3 import LDAPSocketOpenError,LDAPInvalidFilterError,LDAPChangesError,LDAPInvalidCredentialsResult,LDAPSocketSendError,LDAPOperationsErrorResult,LDAPEntryAlreadyExistsResult,LDAPUnwillingToPerformResult, LDAPNoSuchObjectResult
 from pyasn1.error import PyAsn1Error
 

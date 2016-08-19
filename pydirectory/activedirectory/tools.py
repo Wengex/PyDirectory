@@ -1,4 +1,4 @@
-from ldap.tools import *
+from pydirectory.ldap.tools import *
 #from datetime import timedelta, tzinf
 
 class setQuery(setQuery):

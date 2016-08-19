@@ -1,4 +1,4 @@
-from directory.objects import types
+from pydirectory.directory.objects import types
 from ldap3 import MODIFY_DELETE,MODIFY_REPLACE
 
 class object(types.object):

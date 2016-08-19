@@ -1,6 +1,5 @@
-from directory.objects import actions
+from pydirectory.directory.objects import actions
 from ldap3 import SUBTREE, BASE
-import importlib
 
 class search (actions.search):
 	def object(self,*args,**kwargs):

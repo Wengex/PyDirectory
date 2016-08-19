@@ -1,4 +1,4 @@
-from directory.settings.classes import Settings, Option
+from pydirectory.directory.settings.classes import Settings, Option
 
 class settings(Settings):
 	def _options(self,**kwargs):

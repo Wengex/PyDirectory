@@ -1,4 +1,4 @@
-from ldap.objects import types
+from pydirectory.ldap.objects import types
 
 class object(types.object):
 	_type = {}
@@ -80,12 +80,16 @@ class group(object):
 
 	def isMember(self,object):
 		if (object.dn != None) and (self.dn != None):
-			primarygroup = object.primarygroupid.value
-			if self.objectsid.value == primarygroup.objectsid.value:
-				return True
-			members = self._objects.search(self._objects.setQuery(is_member=self.dn.value))
+			ingroup = [object.dn.value]
+			if object.primarygroupid != None:
+				primarygroup = object.primarygroupid.value
+				if self.objectsid.value == primarygroup.objectsid.value:
+					return True
+				ingroup.append(primarygroup.dn.value)
+			#Check if object is member or object primarygroup is member
+			members = self._objects.search(self._objects.setQuery('or',in_group=ingroup))
 			for member in members:
-				if (member.dn.value.strip().lower() == object.dn.value.strip().lower()) or (member.dn.value.strip().lower() == primarygroup.dn.value.strip().lower()):
+				if (member.dn.value.strip().lower() == self.dn.value.strip().lower()):
 					return True
 		return False
 

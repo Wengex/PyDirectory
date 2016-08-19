@@ -1,4 +1,4 @@
-from directory.objects import attributes
+from pydirectory.directory.objects import attributes
 from ldap3 import MODIFY_REPLACE
 
 

@@ -10,7 +10,7 @@ class object(object):
 		self._is_readonly = readonly
 		self._objects = objects
 		self._exceptions = self._objects._exceptions
-		self._attributes = importlib.import_module("%(type)s.objects.attributes" % {'type':self._objects._engine._settings.type})
+		self._attributes = importlib.import_module("pydirectory.%(type)s.objects.attributes" % {'type':self._objects._engine._settings.type})
 		self._attrs = {}
 		self._initload = True
 		self._update(data)

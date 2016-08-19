@@ -1,8 +1,8 @@
-from ldap.objects import classes
+from pydirectory.ldap.objects import classes
 import importlib
 class objecttypes(classes.objecttypes):
 	def _getobject(self,value):
-		types = importlib.import_module("%(type)s.objects.types" % {'type':self._objects._engine._settings.type})
+		types = importlib.import_module("pydirectory.%(type)s.objects.types" % {'type':self._objects._engine._settings.type})
 		value.get('objectClass',[]).sort()
 		for type in dir(types): #get all classes
 			if type.find('__') != 0: #ignore any metaclass. Ej: __whatever__

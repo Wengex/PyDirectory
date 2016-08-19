@@ -1,7 +1,7 @@
 import socket
 import getpass
 import importlib
-from directory import exceptions
+from pydirectory.directory import exceptions
 
 class Option(object):
 	def __init__(self,null=True,value=None,is_password=False,is_hostname=False,type=None,validator=None,description=None):
@@ -72,7 +72,7 @@ class Option(object):
 class Settings(object):
 
 	def __init__(self,type,**kwargs):
-		self._exceptions = importlib.import_module("%(type)s.exceptions" % {'type':type})
+		self._exceptions = importlib.import_module("pydirectory.%(type)s.exceptions" % {'type':type})
 		self.type = Option(null=False,type=str,description="Type engine",value=type)
 		self._options(**kwargs)
 

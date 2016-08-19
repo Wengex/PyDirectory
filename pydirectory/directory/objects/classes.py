@@ -1,5 +1,5 @@
 import importlib
-import directory.objects.types
+import pydirectory.directory.objects.types
 
 
 class objecttypes(object):
@@ -7,7 +7,7 @@ class objecttypes(object):
 		self._objects = objects
 
 	def _getobject(self,value):
-		return importlib.import_module("%(type)s.objects.types" % {'type':self._objects._engine._settings.type}).object(self._objects,value)
+		return importlib.import_module("pydirectory.%(type)s.objects.types" % {'type':self._objects._engine._settings.type}).object(self._objects,value)
 
 	def __call__(self,value):
 		return self._getobject(value)
@@ -15,7 +15,7 @@ class objecttypes(object):
 class objectslist(object):
 	def __init__(self,objects): #change engine by object
 		self._objects = objects
-		self.objecttypes = importlib.import_module("%(type)s.objects.classes" % {'type':self._objects._engine._settings.type}).objecttypes(self._objects)
+		self.objecttypes = importlib.import_module("pydirectory.%(type)s.objects.classes" % {'type':self._objects._engine._settings.type}).objecttypes(self._objects)
 		self._store = []
 
 	def __getitem__(self,key):
@@ -48,10 +48,10 @@ class objectslist(object):
 class objects(object):
 	def __init__(self,engine):
 		self._engine = engine
-		self._exceptions = importlib.import_module("%(type)s.exceptions" % {'type':self._engine._settings.type})
-		self._search = importlib.import_module("%(type)s.objects.actions" % {'type':self._engine._settings.type}).search
-		self._get = importlib.import_module("%(type)s.objects.actions" % {'type':self._engine._settings.type}).get
-		self._new = importlib.import_module("%(type)s.objects.actions" % {'type':self._engine._settings.type}).new
+		self._exceptions = importlib.import_module("pydirectory.%(type)s.exceptions" % {'type':self._engine._settings.type})
+		self._search = importlib.import_module("pydirectory.%(type)s.objects.actions" % {'type':self._engine._settings.type}).search
+		self._get = importlib.import_module("pydirectory.%(type)s.objects.actions" % {'type':self._engine._settings.type}).get
+		self._new = importlib.import_module("pydirectory.%(type)s.objects.actions" % {'type':self._engine._settings.type}).new
 
 	@property
 	def search(self):

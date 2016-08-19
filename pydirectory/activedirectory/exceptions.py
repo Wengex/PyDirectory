@@ -1,1 +1,1 @@
-from ldap.exceptions import *
+from pydirectory.ldap.exceptions import *

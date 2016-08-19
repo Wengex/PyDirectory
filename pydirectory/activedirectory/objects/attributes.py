@@ -1,4 +1,4 @@
-from ldap.objects.attributes import *
+from pydirectory.ldap.objects.attributes import *
 
 class PrimaryGroupID(attribute):
 	def _tovalue(self):
@@ -147,7 +147,7 @@ class formattime(attribute):
 	_is_readonly = True
 	def _tovalue(self):
 		#Hack from ldap3.protocol.formatters.formatters.format_time https://github.com/cannatag/ldap3
-		from activedirectory.tools import OffsetTzInfo
+		from pydirectory.activedirectory.tools import OffsetTzInfo
 		from datetime import datetime
 		raw_value = self.raw[0]
 		if len(raw_value) < 10 or not all((c in b'0123456789+-,.Z' for c in raw_value)) or (b'Z' in raw_value and not raw_value.endswith(b'Z')):  # first ten characters are mandatory and must be numeric or timezone or fraction
@@ -239,7 +239,7 @@ class adTimeStamp(attribute):
 	_is_readonly = True
 	def _tovalue(self):
 		#Hack from ldap3.protocol.formatters.formatters.format_ad_timestamp https://github.com/cannatag/ldap3
-		from activedirectory.tools import OffsetTzInfo
+		from pydirectory.activedirectory.tools import OffsetTzInfo
 		from datetime import datetime
 		try:
 			timestamp = int(self.raw[0])

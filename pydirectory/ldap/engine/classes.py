@@ -1,5 +1,5 @@
 from ldap3 import Server, Connection, ALL, SUBTREE, BASE
-from directory.engine.classes import Engine
+from pydirectory.directory.engine.classes import Engine
 
 class engine (Engine):
 

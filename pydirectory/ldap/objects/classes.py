@@ -1,5 +1,4 @@
-from directory.objects import classes
-import importlib
+from pydirectory.directory.objects import classes
 
 class objecttypes(classes.objecttypes):
 	pass
