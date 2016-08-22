@@ -26,10 +26,11 @@ class object(object):
 			if (type(value) == str) or (type(value) == bytes):
 				if value.stri() == '':
 					value = None
-					
+
 		if not self._initload:
 			if value == None:
-				del self[key]
+				if self.attributes.get(key,False):
+					del self[key]
 				return
 
 		def lower_name(s,obj):
