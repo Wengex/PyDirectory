@@ -18,6 +18,15 @@ class object(object):
 		self._drops = []
 
 	def __setitem__(self,key,value):
+		if str == bytes:
+			if (type(value) == str) or (type(value) == unicode):
+				if value.strip() == '':
+					value = None
+		else:
+			if (type(value) == str) or (type(value) == bytes):
+				if value.stri() == '':
+					value = None
+					
 		if not self._initload:
 			if value == None:
 				del self[key]
