@@ -49,7 +49,11 @@ class search (actions.search):
 
 class get(search):
 	def _get(self,*args,**kwargs):
-		result= super(get,self)._get(*args,**kwargs)
+		try:
+			result= super(get,self)._get(*args,**kwargs)
+		except self._exceptions.LDAPNoSuchObjectResult:
+			raise self._exceptions.ObjectNotExist
+			
 		if len(result) <= 0:
 			raise self._exceptions.ObjectNotExist
 		if len(result) > 1:
