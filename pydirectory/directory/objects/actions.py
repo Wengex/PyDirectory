@@ -14,5 +14,5 @@ class new(object):
 		self._objects = objects
 		self._objectslist = importlib.import_module("pydirectory.%(type)s.objects.classes" % {'type':self._objects._engine._settings.type}).objectslist(self._objects)
 
-	def __call__(self):
-		return self._get()
+	def __call__(self,*args,**kwargs):
+		return self._get(*args,**kwargs)

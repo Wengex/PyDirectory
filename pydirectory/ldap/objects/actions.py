@@ -53,7 +53,7 @@ class get(search):
 			result= super(get,self)._get(*args,**kwargs)
 		except self._exceptions.LDAPNoSuchObjectResult:
 			raise self._exceptions.ObjectNotExist
-			
+
 		if len(result) <= 0:
 			raise self._exceptions.ObjectNotExist
 		if len(result) > 1:
@@ -61,6 +61,10 @@ class get(search):
 		return result[0]
 
 class new (actions.new):
-	def _get(self,data,*args,**kwargs):
+	def _get(self,data=None,*args,**kwargs):
+		if data == None:
+			data = {
+				"dn": None
+			}
 		self._objectslist.append(data)
 		return self._objectslist[0]
