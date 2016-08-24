@@ -29,7 +29,11 @@ class attribute(object):
 		if (type(self._tohuman()) == str):
 			return self._tohuman()
 		else:
-			return str(self._tohuman())
+			human = self._tohuman()
+			if str == bytes: #Is python 2
+				if type(human) == unicode:
+					return human.encode('utf-8')
+			return str(human)
 
 	def __unicode__(self): #fix python 2.7 compatibility
 		if (type(self._tohuman()) == str):

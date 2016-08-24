@@ -24,7 +24,7 @@ class object(object):
 					value = None
 		else:
 			if (type(value) == str) or (type(value) == bytes):
-				if value.stri() == '':
+				if value.strip() == '':
 					value = None
 
 		if not self._initload:
@@ -112,7 +112,7 @@ class object(object):
 
 	def save(self):
 		if not self._is_readonly:
-			self._save()
+			return self._save()
 		else:
 			raise self._exceptions.IsReadOnly
 
