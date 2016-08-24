@@ -9,7 +9,7 @@ except:
 
 setup(
 	name="pydirectory",
-	version="0.1.6",
+	version="0.1.7",
 	description="Python frameWork to managing multiples LDAP services - (gamma)",
 	author="Jonas Delgado Mesa",
 	author_email="jdelgado@yohnah.net",

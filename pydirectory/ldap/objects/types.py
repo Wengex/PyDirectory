@@ -11,8 +11,8 @@ class object(types.object):
 			return False
 
 	def _save(self):
-		self.container._is_modified = False
 		if self.dn.value != None:
+			result = False
 			modlist = {}
 			for key,attr in self._attrs.items():
 				if attr._is_modified and (not attr._is_rdn):
@@ -24,32 +24,46 @@ class object(types.object):
 				modlist[key] = [(operator,[])]
 			self._drops = []
 			if len(modlist) > 0:
-				self._objects._engine._worker.modify(self.dn.value,modlist)
+				result = self._objects._engine._worker.modify(self.dn.value,modlist)
 
 			if self.cn._is_modified:
-				self._objects._engine._worker.modify_dn(self.dn.value,'CN='+self.cn.value)
-				dn = 'CN={cn},{container}'.format(cn=self.cn.value,container=','.join(self.dn.value.split(',')[1:]))
+				if type(self.cn.value) == bytes: #fix to python 2.x
+					cn = 'CN={cn}'.format(cn=self.cn.value)
+					dn = '{cn},{container}'.format(cn=cn,container=','.join(self.dn.value.split(',')[1:]))
+				else:
+					cn = u'CN={cn}'.format(cn=self.cn.value)
+					dn = u'{cn},{container}'.format(cn=cn,container=','.join(self.dn.value.split(',')[1:]))
+				result = self._objects._engine._worker.modify_dn(self.dn.value,cn)
 				self.dn.update(dn)
 				self.cn._is_modified = False
 
-			if self.container._is_modified: #falta por terminar
-				self._objects._engine._worker.modify_dn(self.dn.value,'CN='+self.cn.value,new_superior=self.container.value)
-				dn = 'CN={cn},{container}'.format(cn=self.cn.value,container=self.container.value)
+			if self.container._is_modified:
+				if type(self.cn.value) == bytes: #fix to python 2.x
+					cn = 'CN={cn}'.format(cn=self.cn.value)
+					dn = '{cn},{container}'.format(cn=cn,container=self.container.value)
+				else:
+					cn = u'CN={cn}'.format(cn=self.cn.value)
+					dn = u'{cn},{container}'.format(cn=cn,container=self.container.value)
+				result = self._objects._engine._worker.modify_dn(self.dn.value,cn,new_superior=self.container.value)
 				self.dn.update(dn)
-				self.container._is_modified = False
+				if result:
+					self.container._is_modified = False
+			return result
 		else:
+			result = False
 			attributes = {}
-			dn = 'CN={cn},{container}'.format(cn=self.cn.value,container=self.container.value)
-			self.dn.update(dn)
+			dn = u'CN={cn},{container}'.format(cn=self.cn.value,container=self.container.value)
 			for key,attr in self._attrs.items():
 				if (key != "dn") and (key != "container"):
 					attributes[key]= attr.value
 					attr._is_modified = False
 			if len(attributes) > 0:
 				try:
-					return self._objects._engine._worker.add(self.dn.value,attributes=attributes)
+					result= self._objects._engine._worker.add(dn,attributes=attributes)
 				except self._exceptions.PyAsn1Error:
 					raise self._exceptions.CheckValueAttributes
+			self.dn.update(dn)
+			return result
 
 
 	def _reset(self):

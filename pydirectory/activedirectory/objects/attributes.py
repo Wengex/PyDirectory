@@ -1,5 +1,19 @@
 from pydirectory.ldap.objects.attributes import *
 
+class sAMAccountName(attribute):
+	def _toraw(self,value):
+		checklen = False
+		if str == bytes: #is python2
+			if isinstance(value,basestring):
+				checklen = True
+		else:
+			if isinstance(value,str):
+				checklen = True
+		if checklen:
+			if not (len(value) <= 20):
+				raise self._exceptions.sAMAccountNameTooBig
+		super(sAMAccountName,self)._toraw(value)
+
 class PrimaryGroupID(attribute):
 	def _tovalue(self):
 		sid = '%(base)s-%(id)s' % {
@@ -132,7 +146,7 @@ class ObjectSid(attribute):
 		return 'S-'+result
 
 	def _tovalue(self):
-		return self._getTextSID(self.raw[0])
+		return self._getTextSID(self.raw[0]).decode('utf-8')
 
 
 class sIDHistory(ObjectSid):
@@ -143,7 +157,7 @@ class ObjectGUID(attribute):
 	_is_readonly = True
 	def _tovalue(self):
 		import uuid
-		return str(uuid.UUID(bytes=self.raw[0]))
+		return str(uuid.UUID(bytes=self.raw[0])).decode('utf-8')
 
 
 class formattime(attribute):

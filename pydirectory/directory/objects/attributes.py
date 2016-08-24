@@ -119,6 +119,9 @@ class attribute(object):
 				if not unicodebase:
 					if type(result) == bytes:
 						result = result.decode('utf-8') #Fix to have python 2.x and python 3.x compatibility
+				else:
+					if type(result) == str:
+						result = result.decode('utf-8')
 
 		return result
 

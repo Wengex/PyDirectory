@@ -1,16 +1,16 @@
 class setQuery(object):
 	specialFields = {}
 	operators = {
-		'default' : '({field}={value})',
+		'default' : u'({field}={value})',
 		'conditions': {
-			'gt' : '({field}>{value})',
-			'ge' : '({field}>={value})',
-			'lt' : '({field}<{value})',
-			'le' : '({field}<={value})',
-			'eq' : '({field}={value})',
+			'gt' : u'({field}>{value})',
+			'ge' : u'({field}>={value})',
+			'lt' : u'({field}<{value})',
+			'le' : u'({field}<={value})',
+			'eq' : u'({field}={value})',
 		},
 		'wrapper' : {
-			'not' : '(!{query})'
+			'not' : u'(!{query})'
 		}
 	}
 
@@ -58,6 +58,6 @@ class setQuery(object):
 			result += query
 
 		if oper == 'and':
-			return '(&{query})'.format(query=result)
+			return u'(&{query})'.format(query=result)
 		if oper == 'or'	:
-			return '(|{query})'.format(query=result)
+			return u'(|{query})'.format(query=result)
