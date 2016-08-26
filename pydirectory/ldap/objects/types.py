@@ -35,6 +35,7 @@ class object(types.object):
 					dn = u'{cn},{container}'.format(cn=cn,container=','.join(self.dn.value.split(',')[1:]))
 				result = self._objects._engine._worker.modify_dn(self.dn.value,cn)
 				self.dn.update(dn)
+				self._id = dn
 				self.cn._is_modified = False
 
 			if self.container._is_modified:
@@ -46,6 +47,7 @@ class object(types.object):
 					dn = u'{cn},{container}'.format(cn=cn,container=self.container.value)
 				result = self._objects._engine._worker.modify_dn(self.dn.value,cn,new_superior=self.container.value)
 				self.dn.update(dn)
+				self._id = dn
 				if result:
 					self.container._is_modified = False
 			return result
@@ -63,6 +65,7 @@ class object(types.object):
 				except self._exceptions.PyAsn1Error:
 					raise self._exceptions.CheckValueAttributes
 			self.dn.update(dn)
+			self._id = dn
 			return result
 
 
@@ -70,5 +73,6 @@ class object(types.object):
 		if self.dn.value != None:
 			obj = self._objects.get(dn=self.dn.value,scope='BASE')
 			self._attrs = obj._attrs
+			self._id = obj._id
 		else:
 			raise self._exceptions.DNisNone
