@@ -57,3 +57,6 @@ class CheckValueAttributes(customException):
 
 class IsReadOnly(customException):
 	message = "The action is not permitted. It is read only"
+
+class isNaN(customException):
+	message = "attribute is not a number"

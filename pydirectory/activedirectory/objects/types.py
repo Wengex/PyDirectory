@@ -29,7 +29,7 @@ class user(object):
 		self.save()
 
 	def setPassword(self,value):
-		self.unicodePwd = password
+		self.unicodePwd = value
 		self.save()
 
 	@property

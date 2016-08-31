@@ -109,8 +109,10 @@ class userAccountControl(attribute):
 class unicodePwd(attribute):
 	def _toraw(self,value):
 		try:
+			print ("aqui")
 			password = ('"%s"' % value).encode('utf-16-le')
 		except UnicodeDecodeError:
+			print ("o aqui")
 			password = ('"%s"' % value.decode('utf-8')).encode('utf-16-le')
 		self._raw = [password]
 
@@ -289,3 +291,13 @@ class maxPwdAge(adTimeStamp):
 
 class minPwdAge(adTimeStamp):
 	pass
+
+class countryCode(attribute):
+	def _toraw(self,value):
+		if type(value) == list:
+			aux = value[0]
+		else:
+			aux = value
+		if not aux.isdigit():
+			raise self._exceptions.isNaN
+		self._raw = [aux]
