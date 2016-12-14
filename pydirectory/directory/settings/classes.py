@@ -25,6 +25,8 @@ class Option(object):
 		else:
 			self.value=input(self.__doc__+': ')
 
+	def __iter__(self):
+		return iter(self.value)
 
 	def __str__(self):
 		result = str(self.value)

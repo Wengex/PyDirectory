@@ -30,7 +30,7 @@ class search (actions.search):
 		c = self._objects._engine._worker
 		cookie = None
 		while (cookie) or (cookie == None):
-			c.search(search_base=basedn,search_filter=query,search_scope = scope, attributes=attributes, paged_size=1000, paged_cookie=cookie)
+			c.search(search_base=basedn.value,search_filter=query,search_scope = scope, attributes=attributes, paged_size=1000, paged_cookie=cookie)
 
 			if not (c.result.get('result',False) == 0):
 				code = c.result.get('result')
@@ -39,12 +39,12 @@ class search (actions.search):
 				raise self._exceptions.LDAPError(str(c.result))
 			cookie = c.result['controls']['1.2.840.113556.1.4.319']['value']['cookie']
 			for entry in c.entries:
-				entry._response['raw_attributes'][u'dn'] = [entry._dn]
+				entry.entry_raw_attributes[u'dn'] = [entry.entry_dn]
 				try:
-					entry._response['raw_attributes']['container'] = [",".join(entry._response['raw_attributes']['dn'][0].split(',')[1:])]
+					entry.entry_raw_attributes['container'] = [",".join(entry.entry_raw_attributes['dn'][0].split(',')[1:])]
 				except TypeError: #python 3.0 compatibility
-					entry._response['raw_attributes']['container'] = [b",".join(entry._response['raw_attributes']['dn'][0].split(b',')[1:])]
-				self._objectslist.append(entry._response['raw_attributes'])
+					entry.entry_raw_attributes['container'] = [b",".join(entry.entry_raw_attributes['dn'][0].split(b',')[1:])]
+				self._objectslist.append(entry.entry_raw_attributes)
 		return self._objectslist
 
 class get(search):

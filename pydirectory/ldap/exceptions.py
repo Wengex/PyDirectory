@@ -1,5 +1,5 @@
 from pydirectory.directory.exceptions import *
-from ldap3 import LDAPSocketOpenError,LDAPInvalidFilterError,LDAPChangesError,LDAPInvalidCredentialsResult,LDAPSocketSendError,LDAPOperationsErrorResult,LDAPEntryAlreadyExistsResult,LDAPUnwillingToPerformResult, LDAPNoSuchObjectResult
+from ldap3.core.exceptions import LDAPSocketOpenError,LDAPInvalidFilterError,LDAPChangeError,LDAPInvalidCredentialsResult,LDAPSocketSendError,LDAPOperationsErrorResult,LDAPEntryAlreadyExistsResult,LDAPUnwillingToPerformResult, LDAPNoSuchObjectResult
 from pyasn1.error import PyAsn1Error
 
 class LDAPError(customException):
