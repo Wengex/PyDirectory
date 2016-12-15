@@ -13,7 +13,7 @@ class search (actions.search):
 		if kwargs.get("dn",False):
 			basedn=kwargs["dn"]
 		else:
-			basedn=self._objects._engine._settings.basedn
+			basedn=self._objects._engine._settings.basedn.value
 
 		attributes=['*','+']
 		if kwargs.get('attributes',False):
@@ -30,7 +30,7 @@ class search (actions.search):
 		c = self._objects._engine._worker
 		cookie = None
 		while (cookie) or (cookie == None):
-			c.search(search_base=basedn.value,search_filter=query,search_scope = scope, attributes=attributes, paged_size=1000, paged_cookie=cookie)
+			c.search(search_base=basedn,search_filter=query,search_scope = scope, attributes=attributes, paged_size=1000, paged_cookie=cookie)
 
 			if not (c.result.get('result',False) == 0):
 				code = c.result.get('result')
