@@ -1,1 +1,1 @@
-Python frameWork to managing multiples LDAP service
+Python frameWork to managing multiples LDAP service (deprecated)
